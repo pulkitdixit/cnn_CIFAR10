@@ -8,8 +8,6 @@ import torch
 import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
-from skorch import NeuralNetClassifier
-from sklearn.model_selection import GridSearchCV
 import numpy as np
 import time
 
