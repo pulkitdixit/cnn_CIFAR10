@@ -101,27 +101,25 @@ class ConvNet(nn.Module):
             nn.ReLU())
         self.layer6_bn = nn.BatchNorm2d(64)
         
+        self.drop_out3 = nn.Dropout()
+        
         self.linear1 = nn.Linear(11*11*64, 500)
         self.linear2 = nn.Linear(500, 10)
         
+        self.drop_out4 = nn.Dropout()
+        
     def forward(self, x):
         x = self.layer1(x)
-        #print(x.size())
-        
         x = self.layer1_bn(x)
-        #print(x.size())
         
         x = self.layer2(x)
-        #print(x.size())
         
         x = self.drop_out(x)
         
         x = self.layer3(x)
-        
         x = self.layer3_bn(x)
         
         x = self.layer4(x)
-        
         x = self.layer4_bn(x)
         
         x = self.layer5(x)
@@ -129,17 +127,18 @@ class ConvNet(nn.Module):
         x = self.drop_out2(x)
         
         x = self.layer6(x)
-        
         x = self.layer6_bn(x)
+        
+        x = self.drop_out3(x)
         
         x = x.view(x.size(0), -1)
         #print(x.size())
         
         x = self.linear1(x)
-        #print(x.size())
         
         x = self.linear2(x)
-        #print(x.size())
+        
+        x = self.drop_out4(x)
         
         #return nn.Softmax(x)
         return(x)
@@ -183,6 +182,7 @@ for epochs in range(num_epochs):
     train_acc = correct/total
     print('Training accuracy: ', train_acc)
     
+    model.eval()
     with torch.no_grad():
         correct = 0
         total = 0
@@ -196,3 +196,4 @@ for epochs in range(num_epochs):
             correct = correct + (predicted == labels).sum().item()
     test_acc = correct/total
     print('Test Accuracy: ', test_acc)
+    model.train()
