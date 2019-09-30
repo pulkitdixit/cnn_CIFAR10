@@ -96,7 +96,12 @@ class ConvNet(nn.Module):
         
         self.drop_out2 = nn.Dropout()
         
-        self.linear1 = nn.Linear(10*10*64, 500)
+        self.layer6 = nn.Sequential(
+            nn.Conv2d(64, 64, kernel_size = 4, stride = 1, padding = 2),
+            nn.ReLU())
+        self.layer6_bn = nn.BatchNorm2d(64)
+        
+        self.linear1 = nn.Linear(11*11*64, 500)
         self.linear2 = nn.Linear(500, 10)
         
     def forward(self, x):
@@ -122,6 +127,10 @@ class ConvNet(nn.Module):
         x = self.layer5(x)
         
         x = self.drop_out2(x)
+        
+        x = self.layer6(x)
+        
+        x = self.layer6_bn(x)
         
         x = x.view(x.size(0), -1)
         #print(x.size())
