@@ -16,9 +16,9 @@ import time
 
 
 repo = 'C:\\Users\Pulkit Dixit\Desktop\IE 534\HW3'
-batch_size = 500
-learn_rate = 0.01
-scheduler_step_size = 5
+batch_size = 100
+learn_rate = 0.001
+scheduler_step_size = 10
 scheduler_gamma = 0.1
 num_epochs = 15
 
@@ -29,7 +29,7 @@ num_epochs = 15
 transform_train = transforms.Compose([#transforms.Resize((16,16)),
                                       transforms.RandomRotation(10),
                                       transforms.RandomHorizontalFlip(),
-                                      transforms.RandomVerticalFlip(),
+                                      #transforms.RandomVerticalFlip(),
                                       transforms.ToTensor()
                                      ])
 
@@ -112,9 +112,13 @@ class ConvNet(nn.Module):
         x = self.drop_out(x)
         
         x = self.layer3(x)
+        
         x = self.layer3_bn(x)
+        
         x = self.layer4(x)
+        
         x = self.layer4_bn(x)
+        
         x = self.layer5(x)
         
         x = self.drop_out2(x)
@@ -134,7 +138,7 @@ class ConvNet(nn.Module):
 
 # In[215]:
 
-device = torch.device('cude' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = ConvNet().to(device)
 loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.RMSprop(model.parameters(), 
